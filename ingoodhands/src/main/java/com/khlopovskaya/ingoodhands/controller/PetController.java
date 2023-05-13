@@ -23,7 +23,7 @@ public class PetController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('OWNER') or hasAuthority('EMPLOYEE')")
+    @PreAuthorize("hasAnyAuthority('OWNER','EMPLOYEE')")
     public ResponseEntity<Object> create(Authentication authentication, @RequestBody PetDB petDB) {
         petService.create(petDB);
         return ResponseEntity.ok().body(petDB);
@@ -51,7 +51,6 @@ public class PetController {
                                     @RequestParam(required = false) PetSpecies species,
                                     @RequestParam(required = false) PetSize size,
                                     @RequestParam(required = false) PetGender gender) {
-        List<Pet> pets = petService.getAllFiltered(age, character, colour, species, size, gender);
-        return pets;
+        return petService.getAllFiltered(age, character, colour, species, size, gender);
     }
 }

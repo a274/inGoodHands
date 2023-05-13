@@ -72,7 +72,7 @@ public class PetDB {
 
     public int getAge() {
         LocalDate now = LocalDate.now();
-        return Period.between(now, birthdate).getYears();
+        return Period.between(birthdate, now).getYears();
     }
 
 }

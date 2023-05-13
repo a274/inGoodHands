@@ -81,16 +81,16 @@ public class PetService {
                             PetSize size,
                             PetAge petAge) {
         StringBuilder query = new StringBuilder("FROM PetDB u WHERE u.status = :status");
-        if (species != null) query.append(" and u.species      =   :species");
-        if (colour != null) query.append(" and u.colour       =   :colour");
-        if (gender != null) query.append(" and u.gender       =   :gender");
-        if (size != null) query.append("and u.size    =   :size");
-        if (character != null) query.append("and u.character    =   :character");
+        if (species != null) query.append(" and u.species  = :species");
+        if (colour != null) query.append(" and u.colour = :colour");
+        if (gender != null) query.append(" and u.gender = :gender");
+        if (size != null) query.append(" and u.size = :size");
+        if (character != null) query.append(" and u.character = :character");
         if (petAge != null) {
             switch (petAge) {
-                case TO1YEAR -> query.append(" and u.birthdate >= now() - interval '1 year'");
-                case MIDDLE_AGED -> query.append(" and u.birthdate <= now() - interval '1 year' and u.birthdate >= now() - interval '10 year'");
-                case OVER10YEARS -> query.append(" u.birthdate <= now() - interval '10 year'");
+                case TO1YEAR -> query.append(" and u.birthdate >= (current_date - 365)");
+                case MIDDLE_AGED -> query.append(" and u.birthdate <= (current_date - 365) and u.birthdate >= (current_date - 3650)");
+                case OVER10YEARS -> query.append(" u.birthdate <= (current_date - 3650)");
             }
         }
         return query.toString();
