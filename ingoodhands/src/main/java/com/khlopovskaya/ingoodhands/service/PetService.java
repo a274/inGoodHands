@@ -63,12 +63,12 @@ public class PetService {
         Session session = sessionFactory.openSession();
         Query<PetDB> query = session.createQuery(queryString, PetDB.class);
 
-        query.setParameter("pet_status", PetStatus.READY);
-        if (species != null) query.setParameter("pet_species", species);
-        if (colour != null) query.setParameter("pet_colour", colour);
-        if (gender != null) query.setParameter("pet_gender", gender);
-        if (size != null) query.setParameter("pet_size", size);
-        if (character != null) query.setParameter("pet_character", character);
+        query.setParameter("status", PetStatus.READY);
+        if (species != null) query.setParameter("species", species);
+        if (colour != null) query.setParameter("colour", colour);
+        if (gender != null) query.setParameter("gender", gender);
+        if (size != null) query.setParameter("size", size);
+        if (character != null) query.setParameter("character", character);
         List<PetDB> results = query.list();
         session.close();
         return results;
@@ -80,17 +80,17 @@ public class PetService {
                             PetCharacter character,
                             PetSize size,
                             PetAge petAge) {
-        StringBuilder query = new StringBuilder("FROM PetDB u WHERE u.pet_status = :status");
-        if (species != null) query.append(" and u.pet_species      =   :species");
-        if (colour != null) query.append(" and u.pet_colour       =   :colour");
-        if (gender != null) query.append(" and u.pet_gender       =   :gender");
-        if (size != null) query.append(" u.pet_size    =   :size");
-        if (character != null) query.append(" u.pet_character    =   :character");
+        StringBuilder query = new StringBuilder("FROM PetDB u WHERE u.status = :status");
+        if (species != null) query.append(" and u.species      =   :species");
+        if (colour != null) query.append(" and u.colour       =   :colour");
+        if (gender != null) query.append(" and u.gender       =   :gender");
+        if (size != null) query.append("and u.size    =   :size");
+        if (character != null) query.append("and u.character    =   :character");
         if (petAge != null) {
             switch (petAge) {
-                case TO1YEAR -> query.append(" and u.pet_birthdate >= now() - interval '1 year'");
-                case MIDDLE_AGED -> query.append(" and u.pet_birthdate <= now() - interval '1 year' and u.pet_birthdate >= now() - interval '10 year'");
-                case OVER10YEARS -> query.append(" u.pet_birthdate <= now() - interval '10 year'");
+                case TO1YEAR -> query.append(" and u.birthdate >= now() - interval '1 year'");
+                case MIDDLE_AGED -> query.append(" and u.birthdate <= now() - interval '1 year' and u.birthdate >= now() - interval '10 year'");
+                case OVER10YEARS -> query.append(" u.birthdate <= now() - interval '10 year'");
             }
         }
         return query.toString();

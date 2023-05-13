@@ -5,12 +5,13 @@ import com.khlopovskaya.ingoodhands.entity.model.pet.*;
 import com.khlopovskaya.ingoodhands.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/pet")
 public class PetController {
 
@@ -22,7 +23,8 @@ public class PetController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody PetDB petDB) {
+    @PreAuthorize("hasAuthority('OWNER') or hasAuthority('EMPLOYEE')")
+    public ResponseEntity<Object> create(Authentication authentication, @RequestBody PetDB petDB) {
         petService.create(petDB);
         return ResponseEntity.ok().body(petDB);
     }
@@ -43,13 +45,13 @@ public class PetController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAllFiltered(@RequestParam PetAge age,
-                                                 @RequestParam PetCharacter character,
-                                                 @RequestParam PetColour colour,
-                                                 @RequestParam PetSpecies species,
-                                                 @RequestParam PetSize size,
-                                                 @RequestParam PetGender gender) {
+    public List<Pet> getAllFiltered(@RequestParam(required = false) PetAge age,
+                                    @RequestParam(required = false) PetCharacter character,
+                                    @RequestParam(required = false) PetColour colour,
+                                    @RequestParam(required = false) PetSpecies species,
+                                    @RequestParam(required = false) PetSize size,
+                                    @RequestParam(required = false) PetGender gender) {
         List<Pet> pets = petService.getAllFiltered(age, character, colour, species, size, gender);
-        return ResponseEntity.ok().body(pets);
+        return pets;
     }
 }

@@ -26,6 +26,7 @@ public class PetDB {
 
     @NotNull
     @Column(name = "pet_status")
+    @Enumerated(EnumType.STRING)
     private PetStatus status;
 
     @Column(name = "pet_characteristic")
@@ -41,22 +42,27 @@ public class PetDB {
 
     @NotNull
     @Column(name = "pet_colour")
+    @Enumerated(EnumType.STRING)
     private PetColour colour;
 
     @NotNull
     @Column(name = "pet_species")
+    @Enumerated(EnumType.STRING)
     private PetSpecies species;
 
     @NotNull
     @Column(name = "pet_size")
+    @Enumerated(EnumType.STRING)
     private PetSize size;
 
     @NotNull
     @Column(name = "pet_character")
+    @Enumerated(EnumType.STRING)
     private PetCharacter character;
 
     @NotNull
     @Column(name = "pet_gender")
+    @Enumerated(EnumType.STRING)
     private PetGender gender;
 
     @NotNull

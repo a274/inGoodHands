@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -20,12 +20,13 @@ public class UserService implements UserDetailsService {
 
     private final UserRepo userRepo;
     private final UserFactory userFactory;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepo userRepo, UserFactory userFactory) {
+    public UserService(UserRepo userRepo, UserFactory userFactory, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.userFactory = userFactory;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -35,13 +36,13 @@ public class UserService implements UserDetailsService {
     }
 
     public void create(@NotNull User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
         UserDB userDB = user.toUserDB();
         userRepo.save(userDB);
     }
 
     public void saveShelter(@NotNull User user, int shelterId) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         UserDB userDB = user.toUserDB();
         userDB.setShelter(new Shelter(shelterId));
         userRepo.save(userDB);

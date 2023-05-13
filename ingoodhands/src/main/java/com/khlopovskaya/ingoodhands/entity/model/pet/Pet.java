@@ -4,7 +4,9 @@ import com.khlopovskaya.ingoodhands.entity.db.PetDB;
 import com.khlopovskaya.ingoodhands.entity.db.Shelter;
 import com.khlopovskaya.ingoodhands.entity.model.user.User;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -12,6 +14,8 @@ import java.time.Period;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Pet {
 
     private int id;
@@ -56,7 +60,7 @@ public class Pet {
 
     public int getAge() {
         LocalDate now = LocalDate.now();
-        return Period.between(now, birthdate).getYears();
+        return Period.between(birthdate, now).getYears();
     }
 
     public Pet(PetDB petDB) {
