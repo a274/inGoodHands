@@ -2,6 +2,7 @@ package com.khlopovskaya.ingoodhands.service;
 
 import com.khlopovskaya.ingoodhands.entity.db.Shelter;
 import com.khlopovskaya.ingoodhands.entity.db.UserDB;
+import com.khlopovskaya.ingoodhands.entity.model.user.ShelterEmployee;
 import com.khlopovskaya.ingoodhands.entity.model.user.User;
 import com.khlopovskaya.ingoodhands.factory.UserFactory;
 import com.khlopovskaya.ingoodhands.repository.UserRepo;
@@ -72,4 +73,11 @@ public class UserService implements UserDetailsService {
     public void delete(int id) {
         userRepo.deleteById(id);
     }
+
+    public void updateShelter(ShelterEmployee employee, int shelterId) {
+        UserDB userDB = employee.toUserDB();
+        userDB.setShelter(new Shelter(shelterId));
+        userRepo.save(userDB);
+    }
+
 }

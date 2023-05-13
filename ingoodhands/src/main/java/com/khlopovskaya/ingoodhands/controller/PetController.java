@@ -2,7 +2,7 @@ package com.khlopovskaya.ingoodhands.controller;
 
 import com.khlopovskaya.ingoodhands.entity.db.PetDB;
 import com.khlopovskaya.ingoodhands.entity.model.pet.*;
-import com.khlopovskaya.ingoodhands.entity.model.user.User;
+import com.khlopovskaya.ingoodhands.entity.model.user.ShelterEmployee;
 import com.khlopovskaya.ingoodhands.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,7 @@ public class PetController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('OWNER','EMPLOYEE')")
     public ResponseEntity<Object> create(Authentication authentication, @RequestBody Pet pet) {
-        petService.create((User) authentication.getPrincipal(), pet);
+        petService.create((ShelterEmployee) authentication.getPrincipal(), pet);
         return ResponseEntity.ok().build();
     }
 /*

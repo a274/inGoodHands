@@ -1,11 +1,14 @@
 package com.khlopovskaya.ingoodhands.controller;
 
+import com.khlopovskaya.ingoodhands.entity.model.user.ShelterEmployee;
 import com.khlopovskaya.ingoodhands.entity.model.user.User;
 import com.khlopovskaya.ingoodhands.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
@@ -47,5 +50,12 @@ public class UserController {
         try {
             request.login(username, password);
         } catch (ServletException ignored) { }
+    }
+
+    @PutMapping("/shelter")
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
+    public ResponseEntity<Object> updateShelter(Authentication authentication, @RequestParam int shelterId) {
+        userService.updateShelter((ShelterEmployee) authentication.getPrincipal(), shelterId);
+        return ResponseEntity.noContent().build();
     }
 }

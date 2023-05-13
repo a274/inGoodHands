@@ -2,7 +2,7 @@ package com.khlopovskaya.ingoodhands.service;
 
 import com.khlopovskaya.ingoodhands.entity.db.PetDB;
 import com.khlopovskaya.ingoodhands.entity.model.pet.*;
-import com.khlopovskaya.ingoodhands.entity.model.user.User;
+import com.khlopovskaya.ingoodhands.entity.model.user.ShelterEmployee;
 import com.khlopovskaya.ingoodhands.repository.PetRepo;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -17,16 +17,20 @@ import java.util.stream.Collectors;
 @Service
 public class PetService {
     private final PetRepo petRepo;
+    private final UserService userService;
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public PetService(PetRepo petRepo, SessionFactory sessionFactory) {
+    public PetService(PetRepo petRepo, UserService userService, SessionFactory sessionFactory) {
         this.petRepo = petRepo;
+        this.userService = userService;
         this.sessionFactory = sessionFactory;
     }
 
-    public void create(User user, Pet pet) {
-        pet.setEmployee(user);
+    public void create(ShelterEmployee employee, Pet pet) {
+        pet.setEmployee(employee);
+        ShelterEmployee employeeFromDB = (ShelterEmployee) userService.loadUserByUsername(employee.getLogin());
+        pet.setShelter(employeeFromDB.getWorkShelter());
         PetDB petDB = new PetDB(pet);
         create(petDB);
     }
