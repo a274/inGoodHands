@@ -1,7 +1,7 @@
 package com.khlopovskaya.ingoodhands.controller;
 
 import com.khlopovskaya.ingoodhands.entity.db.Shelter;
-import com.khlopovskaya.ingoodhands.entity.db.User;
+import com.khlopovskaya.ingoodhands.entity.model.user.User;
 import com.khlopovskaya.ingoodhands.service.ShelterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,11 +31,14 @@ public class ShelterController {
     }
 
     @PostMapping
-    @PreAuthorize ("hasAuthority('OWNER')")
+    @PreAuthorize("hasAuthority('OWNER')")
     public ResponseEntity<Object> create(Authentication authentication, @RequestBody Shelter shelter) {
-        // TO DO try catch -> cast
-        shelterService.create(shelter, (User) authentication.getPrincipal());
-        return ResponseEntity.ok().body(shelter);
+        try {
+            shelterService.create(shelter, (User) authentication.getPrincipal());
+            return ResponseEntity.ok().body(shelter);
+        } catch (ClassCastException exception) {
+            return ResponseEntity.badRequest().body("Something went wrong");
+        }
     }
 
     @GetMapping

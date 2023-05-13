@@ -13,7 +13,7 @@ import java.time.Period;
 @Setter
 @Entity
 @Table(name = "pet")
-public class Pet {
+public class PetDB {
 
     @Id
     @Column(name = "pet_id")
@@ -62,7 +62,7 @@ public class Pet {
     @NotNull
     @OneToOne
     @JoinColumn(name = "employee_user_id")
-    private User employee;
+    private UserDB employee;
 
     public int getAge() {
         LocalDate now = LocalDate.now();

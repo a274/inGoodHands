@@ -1,11 +1,10 @@
 package com.khlopovskaya.ingoodhands.service;
 
 import com.khlopovskaya.ingoodhands.entity.db.Shelter;
-import com.khlopovskaya.ingoodhands.entity.db.User;
+import com.khlopovskaya.ingoodhands.entity.db.UserDB;
+import com.khlopovskaya.ingoodhands.entity.model.user.User;
+import com.khlopovskaya.ingoodhands.factory.UserFactory;
 import com.khlopovskaya.ingoodhands.repository.UserRepo;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,56 +12,60 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaUpdate;
-import javax.persistence.criteria.Root;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
 
-    private final SessionFactory sessionFactory;
     private final UserRepo userRepo;
+    private final UserFactory userFactory;
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
-    public UserService(SessionFactory sessionFactory, UserRepo userRepo) {
-        this.sessionFactory = sessionFactory;
+    public UserService(UserRepo userRepo, UserFactory userFactory) {
         this.userRepo = userRepo;
+        this.userFactory = userFactory;
     }
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        UserDB userDB = getByLogin(login);
+        return userFactory.createUser(userDB);
+    }
+
+    public void create(@NotNull User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        UserDB userDB = user.toUserDB();
+        userRepo.save(userDB);
+    }
+
+    public void saveShelter(@NotNull User user, int shelterId) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        UserDB userDB = user.toUserDB();
+        userDB.setShelter(new Shelter(shelterId));
+        userRepo.save(userDB);
+    }
+
+    private UserDB getByLogin(String login) {
         return userRepo.findByLogin(login);
     }
 
-    public void create(User userDto) {
-        User user = new User();
-        user.setLogin(userDto.getLogin());
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setRole(userDto.getRole());
-        user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
-        userRepo.save(user);
-    }
-
-    public void saveShelter(User user, int shelterId) {
-        user.setShelter(new Shelter(shelterId));
-        userRepo.save(user);
-    }
-
-
-
     public User getById(int id) {
+        UserDB userDB = getByIdFromDB(id);
+        return userFactory.createUser(userDB);
+    }
+
+    private UserDB getByIdFromDB(int id) {
         return userRepo.findById(id);
     }
 
-    public List<User> getAll() {
+    public List<UserDB> getAll() {
         return userRepo.findAll();
     }
 
-    public void save(User user) {
-        userRepo.save(user);
+    public void save(UserDB userDB) {
+        userRepo.save(userDB);
     }
 
     public void delete(int id) {

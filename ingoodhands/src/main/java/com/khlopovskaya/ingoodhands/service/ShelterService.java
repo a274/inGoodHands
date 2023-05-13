@@ -1,9 +1,8 @@
 package com.khlopovskaya.ingoodhands.service;
 
 import com.khlopovskaya.ingoodhands.entity.db.Shelter;
-import com.khlopovskaya.ingoodhands.entity.db.User;
+import com.khlopovskaya.ingoodhands.entity.model.user.User;
 import com.khlopovskaya.ingoodhands.repository.ShelterRepo;
-import com.khlopovskaya.ingoodhands.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

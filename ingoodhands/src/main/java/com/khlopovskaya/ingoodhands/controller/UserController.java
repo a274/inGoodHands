@@ -1,7 +1,6 @@
 package com.khlopovskaya.ingoodhands.controller;
 
-import com.khlopovskaya.ingoodhands.entity.AuthData;
-import com.khlopovskaya.ingoodhands.entity.db.User;
+import com.khlopovskaya.ingoodhands.entity.model.user.User;
 import com.khlopovskaya.ingoodhands.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +29,8 @@ public class UserController {
     }
 
     @GetMapping("/sign")
-    public ResponseEntity<Object> signIn(HttpServletRequest request, @RequestBody AuthData authData) {
-        authWithHttpServletRequest(request, authData.getUsername(), authData.getPassword());
+    public ResponseEntity<Object> signIn(HttpServletRequest request, @RequestBody User user) {
+        authWithHttpServletRequest(request, user.getLogin(), user.getPassword());
         return ResponseEntity.ok().build();
     }
 
