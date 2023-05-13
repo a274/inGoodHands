@@ -2,6 +2,7 @@ package com.khlopovskaya.ingoodhands.service;
 
 import com.khlopovskaya.ingoodhands.entity.db.PetDB;
 import com.khlopovskaya.ingoodhands.entity.model.pet.*;
+import com.khlopovskaya.ingoodhands.entity.model.user.User;
 import com.khlopovskaya.ingoodhands.repository.PetRepo;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -22,6 +23,12 @@ public class PetService {
     public PetService(PetRepo petRepo, SessionFactory sessionFactory) {
         this.petRepo = petRepo;
         this.sessionFactory = sessionFactory;
+    }
+
+    public void create(User user, Pet pet) {
+        pet.setEmployee(user);
+        PetDB petDB = new PetDB(pet);
+        create(petDB);
     }
 
     public void create(PetDB petDB) {

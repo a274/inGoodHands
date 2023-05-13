@@ -75,4 +75,18 @@ public class PetDB {
         return Period.between(birthdate, now).getYears();
     }
 
+    public PetDB(Pet pet) {
+        this.id = pet.getId();
+        this.name = pet.getName();
+        this.status = pet.getStatus();
+        this.characteristic = pet.getCharacteristic();
+        this.shelter = pet.getShelter();
+        this.birthdate = pet.getBirthdate();
+        this.colour = pet.getColour();
+        this.species = pet.getSpecies();
+        this.size = pet.getSize();
+        this.character = pet.getCharacter();
+        this.gender = pet.getGender();
+        this.employee = pet.getEmployee().toUserDB();
+    }
 }
